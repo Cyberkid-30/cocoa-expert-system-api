@@ -24,13 +24,25 @@ def signup():
 
 @auth_bp.route("/login", methods=["POST"])
 def login():
+    # Parse the request data
     data = request.get_json()
+    if not data or not isinstance(data, dict):
+        return jsonify({"error": "Invalid input. JSON data required."}), 400
+
+    # Extract username and password
     username = data.get("username")
     password = data.get("password")
+    if not username or not password:
+        return jsonify({"error": "Both username and password are required."}), 400
 
+    # Query the user from the database
     user = User.query.filter_by(username=username).first()
     if not user or not user.check_password(password):
-        return jsonify({"error": "Invalid credentials"}), 401
+        return jsonify({"error": "Invalid credentials."}), 401
 
-    access_token = create_access_token(identity=user.id)
+    # Create the JWT token using a string for the identity
+    access_token = create_access_token(
+        identity=str(user.id)
+    )  # Ensure identity is a string
+
     return jsonify({"access_token": access_token}), 200
