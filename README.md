@@ -164,7 +164,15 @@ Provide facts about the soil, environment, or observed symptoms:
 
 ---
 
-### **3. Error Responses**
+### **3. Diseases**
+
+**Endpoint**: `/diseases`  
+**Method**: `GET`  
+**Description**: Returns a reponse object with an array of the list of diseases available to the system.
+
+---
+
+### **4. Error Responses**
 
 For all endpoints, common errors include:
 
