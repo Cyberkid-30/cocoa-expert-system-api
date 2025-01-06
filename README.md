@@ -93,9 +93,13 @@ Authorization: Bearer <your_access_token>
 
 ---
 
+Here’s the refactored section of the README to reflect the new structure and validation for the `/diagnose` endpoint:
+
+---
+
 ### **2. Disease Diagnosis**
 
-#### **2.1 Diagnose Disease and provide solutions**
+#### **2.1 Diagnose Disease and Provide Solutions**
 
 **Endpoint**: `/diagnose`  
 **Method**: `POST`  
@@ -109,33 +113,69 @@ Authorization: Bearer <your_access_token>
 }
 ```
 
-**Request Body**:
-Provide facts about the soil, environment, or observed symptoms:
+**Request Body**:  
+Provide details about the crop's condition.
 
 ```json
 {
+  "disease": "Damping-off",
+  "growth_stage": "germination",
+  "seedlings_exposed_to_sunlight": true,
   "soil_moisture": 25,
-  "disease": "Fusarium wilt"
+  "soil_type": "sterilized",
+  "temperature": 30
 }
 ```
 
+**Request Validation**:
+
+- The `disease` field must be a string matching one of the diseases available from the `/diseases` endpoint.
+- The `growth_stage` must be one of the following values:
+  - `"germination"`
+  - `"seedling"`
+  - `"nursery"`
+- The `seedlings_exposed_to_sunlight` must be `true` or `false`.
+- The `soil_moisture` must be a numeric value.
+- The `soil_type` must be either `"sterilized"` or `"non-sterilized"`.
+- The `temperature` must be a numeric value.
+
 **Response**:
 
-- **200 OK**:
+- **200 OK**:  
+  Returns recommended actions based on the provided data.
+
+  Example:
+
   ```json
   {
     "actions": [
-      "irrigate the plants",
-      "use fungicides and improve soil drainage"
+      "Irrigate the plants",
+      "Maintain a cool, dry environment",
+      "Reduce watering and improve drainage"
     ]
   }
   ```
-- **401 Unauthorized**:
+
+- **400 Bad Request**:  
+  Example:
+
+  ```json
+  {
+    "error": "Invalid input. Ensure 'disease' matches one from the /diseases endpoint."
+  }
+  ```
+
+- **401 Unauthorized**:  
+  Example:
   ```json
   {
     "error": "Missing or invalid token"
   }
   ```
+
+**Notes**:
+
+- Make a `GET` request to `/diseases` to retrieve the list of diseases supported by the system.
 
 ---
 
