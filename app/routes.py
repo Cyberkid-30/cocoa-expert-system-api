@@ -11,6 +11,15 @@ api_bp = Blueprint("api", __name__)
 def diagnose():
     data = request.json
     print(data)
+
+    # Convert string "true"/"false" to actual booleans
+    for key, value in data.items():
+        if isinstance(value, str):
+            if value.lower() == "true":
+                data[key] = True
+            elif value.lower() == "false":
+                data[key] = False
+
     engine = CocoaDiseaseDetector()
     engine.reset()
 
