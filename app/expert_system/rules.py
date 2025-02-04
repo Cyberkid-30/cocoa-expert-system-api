@@ -16,8 +16,16 @@ class CocoaDiseaseDetector(KnowledgeEngine):
         self.declare(Fact(action="Improve drainage"))
 
     # Temperature and Light
-    @Rule(Fact(temperature=P(lambda x: x < 24 or x > 30)))
-    def control_temperature(self):
+    @Rule(Fact(temperature=P(lambda x: x < 24)))
+    def control_temperature_low(self):
+        self.declare(Fact(action="Consider heat sources or warm clothing"))
+
+    @Rule(Fact(temperature=P(lambda x: 24 <= x <= 30)))
+    def control_temperature_normal(self):
+        self.declare(Fact(action="Temperature is within normal range"))
+
+    @Rule(Fact(temperature=P(lambda x: x > 30)))
+    def control_temperature_high(self):
         self.declare(Fact(action="Consider shade or temperature control measures"))
 
     @Rule(Fact(seedlings_exposed_to_sunlight=True))
