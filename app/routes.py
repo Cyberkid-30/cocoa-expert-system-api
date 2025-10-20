@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.expert_system.rules import CocoaDiseaseDetector
 from experta import Fact
 
-api_bp = Blueprint("api", __name__)
+api_bp = Blueprint("api", __name__, url_prefix='/api')
 
 
 @api_bp.route("/diagnose", methods=["POST"])
@@ -13,22 +13,23 @@ def diagnose():
     print(data)
 
     # Convert string "true"/"false" to actual booleans
-    for key, value in data.items():
+    for key, value in data.items():  # type: ignore
         if isinstance(value, str):
             if value.lower() == "true":
-                data[key] = True
+                data[key] = True  # type: ignore
             elif value.lower() == "false":
-                data[key] = False
+                data[key] = False  # type: ignore
 
     engine = CocoaDiseaseDetector()
     engine.reset()
 
     # Declare facts
-    for key, value in data.items():
+    for key, value in data.items():  # type: ignore
         engine.declare(Fact(**{key: value}))
 
     engine.run()
-    actions = [fact["action"] for fact in engine.facts.values() if "action" in fact]
+    actions = [fact["action"]
+               for fact in engine.facts.values() if "action" in fact]
 
     return jsonify({"actions": actions})
 

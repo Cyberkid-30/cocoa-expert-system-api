@@ -14,7 +14,7 @@ def signup():
     if User.query.filter_by(username=username).first():
         return jsonify({"error": "User already exists"}), 400
 
-    user = User(username=username)
+    user = User(username=username) # type: ignore
     user.set_password(password)
     db.session.add(user)
     db.session.commit()
